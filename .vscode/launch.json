@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Open student-result.html",
+            "file": "c:\\Users\\user\\OneDrive\\Documents\\300 level IT 1st PROJECT\\Student_Result_System\\student-result.html"
+        }
+    ]
+}
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "msedge",
+            "request": "launch",
+            "name": "Open student-result.html",
+            "file": "c:\\Users\\user\\OneDrive\\Documents\\300 level IT 1st PROJECT\\Student_Result_System\\student-result.html"
+        }
+    ]
+}

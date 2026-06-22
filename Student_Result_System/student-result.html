@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Result Processing System</title>
+<link rel="stylesheet" href="student-result.css">
+</head>
+<body>
+<div class="container">
+    <h1>🎓 Student Result Processing System</h1>
+
+    <div class="form-row">
+      <input type="text" id="studentName" placeholder="Student Name">
+      <input type="number" id="studentScore" placeholder="Score (0-100)" min="0" max="100">
+      <button onclick="addStudent()">Add Student</button>
+    </div>
+    <p id="errorMsg" class="error-msg"></p>
+
+    <div class="file-row">
+      <button onclick="linkFile()">🔗 Link to JSON File</button>
+      <button onclick="saveToFile()">💾 Download Copy</button>
+      <button onclick="document.getElementById('fileInput').click()">📂 Load from File</button>
+      <input type="file" id="fileInput" accept=".json" style="display:none" onchange="loadFromFile(event)">
+      <span id="fileStatus" class="file-status"></span>
+    </div>
+
+    <table id="resultsTable">
+     <thead>
+       <tr>
+         <th>#</th>
+         <th>Name</th>
+         <th>Score</th>
+         <th>Grade</th>
+         <th>Status</th>
+         <th></th>
+       </tr>
+     </thead>
+    <tbody id="resultsBody">
+    </tbody>
+    </table>
+    <p id="emptyMsg" class="empty-msg">No students added yet.</p>
+    <div class="summary" id="summary" style="display:none;">
+      <p><strong>Total Students:</strong> <span id="totalCount">0</span></p>
+      <p><strong>Passed:</strong> <span id="passCount">0</span></p>
+      <p><strong>Failed:</strong> <span id="failCount">0</span></p>
+      <p><strong>Class Average:</strong> <span id="average">0</span></p>
+      <p><strong>Highest Score:</strong> <span id="highest">-</span></p>
+    </div>
+</div>
+<script src="student-result-script.js"></script>
+</body>
+</html>
