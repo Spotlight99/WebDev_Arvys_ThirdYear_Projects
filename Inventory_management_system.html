@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inventory Management System</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #134e5e, #71b280);
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 15px;
+  }
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  h1 { text-align: center; color: #134e5e; margin-top: 0; }
+  .form-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+  input {
+    flex: 1;
+    min-width: 130px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+  }
+  button {
+    padding: 10px 18px;
+    background: #134e5e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.2s;
+  }
+  button:hover { background: #1c6e83; }
+  .search-row {
+    margin: 20px 0 10px;
+  }
+  .stats {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+  .stat-box {
+    flex: 1;
+    background: #f1f9f5;
+    border-radius: 8px;
+    padding: 12px 16px;
+    min-width: 140px;
+  }
+  .stat-box strong { display: block; font-size: 20px; color: #134e5e; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+  }
+  th { background: #f1f9f5; color: #134e5e; }
+  .empty-msg { text-align: center; color: #888; padding: 20px; }
+  .delete-btn {
+    background: #c0392b;
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  .delete-btn:hover { background: #a93226; }
+  .low-stock { color: #c0392b; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📦 Inventory Management System</h1>
+
+  <div class="form-row">
+    <input type="text" id="productName" placeholder="Product Name">
+    <input type="number" id="productQty" placeholder="Quantity" min="0">
+    <input type="number" id="productPrice" placeholder="Price ($)" min="0" step="0.01">
+    <button onclick="addProduct()">Add Product</button>
+  </div>
+
+  <div class="search-row">
+    <input type="text" id="searchBox" placeholder="🔍 Search products by name..." onkeyup="renderTable()" style="width:100%;">
+  </div>
+
+  <div class="stats">
+    <div class="stat-box"><span>Total Products</span><strong id="totalProducts">0</strong></div>
+    <div class="stat-box"><span>Total Units</span><strong id="totalUnits">0</strong></div>
+    <div class="stat-box"><span>Total Value</span><strong id="totalValue">$0.00</strong></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Value</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="productBody"></tbody>
+  </table>
+  <p id="emptyMsg" class="empty-msg">No products found.</p>
+</div>
+
+<script>
+  let products = [];
+  const LOW_STOCK_THRESHOLD = 5;
+
+  function addProduct() {
+    const nameInput = document.getElementById('productName');
+    const qtyInput = document.getElementById('productQty');
+    const priceInput = document.getElementById('productPrice');
+
+    const name = nameInput.value.trim();
+    const qty = parseInt(qtyInput.value);
+    const price = parseFloat(priceInput.value);
+
+    if (!name) {
+      alert('Please enter a product name.');
+      return;
+    }
+    if (isNaN(qty) || qty < 0) {
+      alert('Please enter a valid quantity.');
+      return;
+    }
+    if (isNaN(price) || price < 0) {
+      alert('Please enter a valid price.');
+      return;
+    }
+
+    products.push({ name, qty, price });
+    nameInput.value = '';
+    qtyInput.value = '';
+    priceInput.value = '';
+    nameInput.focus();
+    renderTable();
+  }
+
+  function deleteProduct(index) {
+    products.splice(index, 1);
+    renderTable();
+  }
+
+  function renderTable() {
+    const search = document.getElementById('searchBox').value.toLowerCase();
+    const body = document.getElementById('productBody');
+    const emptyMsg = document.getElementById('emptyMsg');
+    body.innerHTML = '';
+
+    const filtered = products
+      .map((p, i) => ({ ...p, originalIndex: i }))
+      .filter(p => p.name.toLowerCase().includes(search));
+
+    if (filtered.length === 0) {
+      emptyMsg.style.display = 'block';
+    } else {
+      emptyMsg.style.display = 'none';
+    }
+
+    filtered.forEach((p, displayIndex) => {
+      const value = p.qty * p.price;
+      const row = document.createElement('tr');
+      const lowStock = p.qty <= LOW_STOCK_THRESHOLD;
+      row.innerHTML = `
+        <td>${displayIndex + 1}</td>
+        <td>${p.name}</td>
+        <td class="${lowStock ? 'low-stock' : ''}">${p.qty}${lowStock ? ' ⚠ Low' : ''}</td>
+        <td>$${p.price.toFixed(2)}</td>
+        <td>$${value.toFixed(2)}</td>
+        <td><button class="delete-btn" onclick="deleteProduct(${p.originalIndex})">Remove</button></td>
+      `;
+      body.appendChild(row);
+    });
+
+    updateStats();
+  }
+
+  function updateStats() {
+    const totalProducts = products.length;
+    const totalUnits = products.reduce((sum, p) => sum + p.qty, 0);
+    const totalValue = products.reduce((sum, p) => sum + p.qty * p.price, 0);
+
+    document.getElementById('totalProducts').textContent = totalProducts;
+    document.getElementById('totalUnits').textContent = totalUnits;
+    document.getElementById('totalValue').textContent = `$${totalValue.toFixed(2)}`;
+  }
+
+  document.getElementById('productPrice').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addProduct();
+  });
+
+  renderTable();
+</script>
+</body>
+</html>

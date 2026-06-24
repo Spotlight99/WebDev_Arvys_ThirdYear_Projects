@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ATM Simulation System</title>
+<link rel="stylesheet" href="atm-style.css">
+</head>
+<body>
+<div class="atm">
+  <h2>🏦 ATM SIMULATOR</h2>
+  <div class="screen" id="screen">
+    Welcome! Please insert your card to begin.
+  </div>
+
+  <p class="notice">🔑 Demo Mode — Default PIN is <strong>1234</strong></p>
+
+  <div class="card-action" id="insertSection">
+    <button onclick="insertCard()">💳 Insert Card</button>
+  </div>
+
+  <div class="input-area" id="pinSection">
+    <input type="password" id="pinInput" placeholder="Enter 4-digit PIN" maxlength="4" inputmode="numeric">
+    <button onclick="checkPin()">Log In</button>
+  </div>
+
+  <div class="buttons" id="mainButtons" style="display:none;">
+    <button onclick="checkBalance()">Check Balance</button>
+    <button onclick="showInput('withdraw')">Withdraw</button>
+    <button onclick="showInput('deposit')">Deposit</button>
+    <button onclick="resetInput()">Cancel</button>
+  </div>
+
+  <div class="input-area" id="withdrawInput">
+    <input type="number" id="withdrawAmount" placeholder="Amount to withdraw" min="1">
+    <button onclick="withdraw()">Go</button>
+  </div>
+
+  <div class="input-area" id="depositInput">
+    <input type="number" id="depositAmount" placeholder="Amount to deposit" min="1">
+    <button onclick="deposit()">Go</button>
+  </div>
+
+  <div class="eject-popup" id="ejectPopup" style="display:none;">
+    <p>Transaction complete. Done banking?</p>
+    <button onclick="ejectCard()">⏏ Eject Card</button>
+  </div>
+
+  <div class="history" id="history">Transaction history will appear here.</div>
+</div>
+
+<script src="atm-script.js"></script>
+</body>
+</html>
